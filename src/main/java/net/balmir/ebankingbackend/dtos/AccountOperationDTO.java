@@ -1,4 +1,4 @@
-package net.balmir.ebankingbackend.entities;
+package net.balmir.ebankingbackend.dtos;
 
 
 
@@ -6,20 +6,18 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.balmir.ebankingbackend.entities.BankAccount;
 import net.balmir.ebankingbackend.enums.OperationType;
 
 import java.util.Date;
-@Entity
-@Data @NoArgsConstructor @AllArgsConstructor
-public class AccountOperation {
+
+@Data
+public class AccountOperationDTO {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private Date operationDate;
     private double amount ;
-    @Enumerated (EnumType.STRING)
     private OperationType type ;
-    @ManyToOne
-    private BankAccount bankAccount ;
     private String description ;
 
 }
