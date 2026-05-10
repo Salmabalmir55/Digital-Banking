@@ -1,7 +1,7 @@
 package net.balmir.ebankingbackend.exceptions;
 
-public class BalanceNotSufficentException extends Exception {
-    public BalanceNotSufficentException(String message) {
+public class BalanceNotSufficientException extends Exception {
+    public BalanceNotSufficientException(String message) {
         super(message);
     }
 }

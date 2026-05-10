@@ -11,22 +11,17 @@ import net.balmir.ebankingbackend.entities.SavingAccount;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class BankAccountMapperImpl {
-    public CustomerDTO fromCustomer(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(customer, customerDTO);
-        //customerDTO.setId(customer.getId());
-        //customerDTO.setName(customer.getName());
-        //customerDTO.setEmail(customer.getEmail());
-        return customerDTO;
+    public CustomerDTO fromCustomer(Customer customer){
+        CustomerDTO customerDTO=new CustomerDTO();
+        BeanUtils.copyProperties(customer,customerDTO);
+        return  customerDTO;
     }
-
-    public Customer fromCustomerDTO(CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerDTO, customer);
-        return customer;
+    public Customer fromCustomerDTO(CustomerDTO customerDTO){
+        Customer customer=new Customer();
+        BeanUtils.copyProperties(customerDTO,customer);
+        return  customer;
     }
 
     public SavingBankAccountDTO fromSavingBankAccount(SavingAccount savingAccount){
@@ -36,8 +31,9 @@ public class BankAccountMapperImpl {
         savingBankAccountDTO.setType(savingAccount.getClass().getSimpleName());
         return savingBankAccountDTO;
     }
-    public SavingAccount  fromSavingAccountDTO(SavingBankAccountDTO savingBankAccountDTO){
-        SavingAccount savingAccount =new SavingAccount();
+
+    public SavingAccount fromSavingBankAccountDTO(SavingBankAccountDTO savingBankAccountDTO){
+        SavingAccount savingAccount=new SavingAccount();
         BeanUtils.copyProperties(savingBankAccountDTO,savingAccount);
         savingAccount.setCustomer(fromCustomerDTO(savingBankAccountDTO.getCustomerDTO()));
         return savingAccount;
@@ -63,4 +59,5 @@ public class BankAccountMapperImpl {
         BeanUtils.copyProperties(accountOperation,accountOperationDTO);
         return accountOperationDTO;
     }
+
 }
