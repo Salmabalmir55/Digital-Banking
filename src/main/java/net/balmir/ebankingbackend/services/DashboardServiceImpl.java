@@ -1,8 +1,8 @@
 package net.balmir.ebankingbackend.services;
 
 
-import lombok.AllArgsConstructor;
 
+import lombok.AllArgsConstructor;
 import net.balmir.ebankingbackend.dtos.CustomerDTO;
 import net.balmir.ebankingbackend.dtos.DashboardDTO;
 import net.balmir.ebankingbackend.entities.AccountOperation;
@@ -33,50 +33,67 @@ public class DashboardServiceImpl implements DashboardService {
   private final AccountOperationRepository operationRepository;
 
   private static final SimpleDateFormat SDF =
-    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+          new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
   @Override
   public DashboardDTO getDashboardData() {
     DashboardDTO dto = new DashboardDTO();
 
     List<BankAccount> allAccounts = bankAccountRepository.findAll();
+    List<AccountOperation> allOperations = operationRepository.findAll();
 
+    // Statistiques des comptes
     dto.setTotalCustomers(customerRepository.count());
     dto.setTotalAccounts(allAccounts.size());
     dto.setActiveAccounts(
-      allAccounts.stream()
-        .filter(a -> a.getStatus() == AccountStatus.ACTIVATED).count());
+            allAccounts.stream()
+                    .filter(a -> a.getStatus() == AccountStatus.ACTIVATED).count());
     dto.setSuspendedAccounts(
-      allAccounts.stream()
-        .filter(a -> a.getStatus() == AccountStatus.SUSPENDED).count());
+            allAccounts.stream()
+                    .filter(a -> a.getStatus() == AccountStatus.SUSPENDED).count());
     dto.setCurrentAccounts(
-      allAccounts.stream().filter(a -> a instanceof CurrentAccount).count());
+            allAccounts.stream().filter(a -> a instanceof CurrentAccount).count());
     dto.setSavingAccounts(
-      allAccounts.stream().filter(a -> a instanceof SavingAccount).count());
+            allAccounts.stream().filter(a -> a instanceof SavingAccount).count());
     dto.setTotalBalance(
-      allAccounts.stream().mapToDouble(BankAccount::getBalance).sum());
+            allAccounts.stream().mapToDouble(BankAccount::getBalance).sum());
 
+    // Statistiques des opérations - AJOUTEZ CECI
+    dto.setTotalOperations(allOperations.size());
+    double totalDebit = allOperations.stream()
+            .filter(op -> op.getType() == OperationType.DEBIT)
+            .mapToDouble(AccountOperation::getAmount)
+            .sum();
+    dto.setTotalDebitAmount(totalDebit);
+    double totalCredit = allOperations.stream()
+            .filter(op -> op.getType() == OperationType.CREDIT)
+            .mapToDouble(AccountOperation::getAmount)
+            .sum();
+    dto.setTotalCreditAmount(totalCredit);
+
+    // Clients récents
     dto.setRecentCustomers(
-      customerRepository
-        .findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id")))
-        .stream().map(c -> {
-          CustomerDTO cdto = new CustomerDTO();
-          cdto.setId(c.getId());
-          cdto.setName(c.getName());
-          cdto.setEmail(c.getEmail());
-          return cdto;
-        }).collect(Collectors.toList()));
+            customerRepository
+                    .findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id")))
+                    .stream().map(c -> {
+                      CustomerDTO cdto = new CustomerDTO();
+                      cdto.setId(c.getId());
+                      cdto.setName(c.getName());
+                      cdto.setEmail(c.getEmail());
+                      return cdto;
+                    }).collect(Collectors.toList()));
 
+    // Comptes récents
     dto.setRecentAccounts(
-      bankAccountRepository
-        .findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt")))
-        .stream().map(this::mapAccount).collect(Collectors.toList()));
+            bankAccountRepository
+                    .findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt")))
+                    .stream().map(this::mapAccount).collect(Collectors.toList()));
 
-
+    // Opérations récentes
     dto.setRecentOperations(
-      operationRepository
-        .findAll(PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "operationDate")))
-        .stream().map(this::mapOperation).collect(Collectors.toList()));
+            operationRepository
+                    .findAll(PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "operationDate")))
+                    .stream().map(this::mapOperation).collect(Collectors.toList()));
 
     return dto;
   }
@@ -87,9 +104,21 @@ public class DashboardServiceImpl implements DashboardService {
     d.setBalance(a.getBalance());
     d.setStatus(a.getStatus() != null ? a.getStatus().name() : "");
     d.setCreatedAt(a.getCreatedAt() != null ? SDF.format(a.getCreatedAt()) : "");
-    if (a.getCustomer() != null) d.setCustomerName(a.getCustomer().getName());
-    if (a instanceof CurrentAccount ca) { d.setType("CurrentAccount"); d.setOverdraft(ca.getOverDraft()); }
-    else if (a instanceof SavingAccount sa) { d.setType("SavingAccount"); d.setInterestRate(sa.getInterestRate()); }
+    d.setCurrency("EUR");  // ← AJOUTEZ CECI
+
+    if (a.getCustomer() != null) {
+      d.setCustomerName(a.getCustomer().getName());
+    }
+
+    if (a instanceof CurrentAccount ca) {
+      d.setType("CurrentAccount");
+      d.setOverdraft(ca.getOverDraft());
+      d.setInterestRate(0);  // Valeur par défaut
+    } else if (a instanceof SavingAccount sa) {
+      d.setType("SavingAccount");
+      d.setInterestRate(sa.getInterestRate());
+      d.setOverdraft(0);  // Valeur par défaut
+    }
     return d;
   }
 
@@ -100,10 +129,12 @@ public class DashboardServiceImpl implements DashboardService {
     d.setDescription(op.getDescription());
     d.setType(op.getType() != null ? op.getType().name() : "");
     d.setOperationDate(op.getOperationDate() != null ? SDF.format(op.getOperationDate()) : "");
+
     if (op.getBankAccount() != null) {
       d.setAccountId(op.getBankAccount().getId());
-      if (op.getBankAccount().getCustomer() != null)
+      if (op.getBankAccount().getCustomer() != null) {
         d.setCustomerName(op.getBankAccount().getCustomer().getName());
+      }
     }
     return d;
   }

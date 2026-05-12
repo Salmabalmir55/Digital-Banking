@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.balmir.ebankingbackend.enums.AccountStatus;
-import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 @Entity

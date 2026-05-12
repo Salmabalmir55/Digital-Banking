@@ -200,4 +200,3 @@ public class BankAccountServiceImpl implements BankAccountService {
         return customerDTOS;
     }
 }
-

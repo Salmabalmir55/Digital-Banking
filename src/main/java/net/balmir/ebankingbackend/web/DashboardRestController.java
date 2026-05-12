@@ -7,7 +7,7 @@ import net.balmir.ebankingbackend.services.DashboardService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/api/dashboard")
 @AllArgsConstructor
 //@CrossOrigin("*")
 public class DashboardRestController {
@@ -16,6 +16,7 @@ public class DashboardRestController {
 
   @GetMapping
   public DashboardDTO getDashboard() {
+
     return dashboardService.getDashboardData();
   }
 }
