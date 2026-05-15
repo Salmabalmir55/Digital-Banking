@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../services/accounts.service';
 import { CustomerService } from '../services/customer.service';
+import { AuthService } from '../services/auth.service';
 import { BankAccountDTO, AccountHistoryDTO } from '../model/account.model';
 import { Customer } from '../model/customer.model';
 
@@ -35,11 +36,11 @@ export class AccountsComponent implements OnInit {
   showTransferModal = false;
 
   showNewAccountModal = false;
-  newAccountType      = 'CURRENT';   // 'CURRENT' | 'SAVING'
+  newAccountType      = 'CURRENT';
   newAccountCustomerId: number | null = null;
   newAccountBalance   = 0;
-  newAccountOverdraft = 0;           // CurrentAccount only
-  newAccountRate      = 0;           // SavingAccount only
+  newAccountOverdraft = 0;
+  newAccountRate      = 0;
   customerSearch      = '';
   filteredCustomers: Customer[] = [];
 
@@ -51,7 +52,8 @@ export class AccountsComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private customerService: CustomerService
+    private customerService: CustomerService ,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +65,6 @@ export class AccountsComponent implements OnInit {
     this.loading = true;
     this.accountService.getAccounts().subscribe({
       next: (data) => {
-        // Normalise: ensure customerDTO is never undefined
         this.accounts = data.map(a => ({
           ...a,
           customerDTO: a.customerDTO ?? null
@@ -137,7 +138,6 @@ export class AccountsComponent implements OnInit {
         this.showOperationModal = false;
         this.loadAccounts();
         if (this.selectedAccount) {
-          // refresh detail
           const id = this.selectedAccount.id;
           setTimeout(() => {
             const found = this.accounts.find(a => a.id === id);
@@ -161,23 +161,42 @@ export class AccountsComponent implements OnInit {
   closeTransfer(): void { this.showTransferModal = false; this.modalError = ''; }
 
   submitTransfer(): void {
+    console.log('Transfer submitted');
+    console.log('Source:', this.transferSource);
+    console.log('Dest:', this.transferDest);
+    console.log('Amount:', this.transferAmount);
+
     if (!this.transferSource || !this.transferDest || this.transferAmount <= 0) {
-      this.modalError = 'Select both accounts and enter a positive amount.'; return;
+      this.modalError = 'Select both accounts and enter a positive amount.';
+      return;
     }
+
     if (this.transferSource === this.transferDest) {
-      this.modalError = 'Source and destination must be different.'; return;
+      this.modalError = 'Source and destination must be different.';
+      return;
     }
+
+    this.loading = true;
+
     this.accountService.transfer({
-      accountSource: this.transferSource, accountDestination: this.transferDest,
-      amount: this.transferAmount, description: 'Transfer'
+      accountSource: this.transferSource,
+      accountDestination: this.transferDest,
+      amount: this.transferAmount,
+      description: 'Transfer from ' + this.transferSource + ' to ' + this.transferDest
     }).subscribe({
-      next: () => {
-        this.successMsg        = `Transfer of ${this.transferAmount.toLocaleString()} MAD completed.`;
-        this.showTransferModal  = false;
+      next: (response) => {
+        console.log('Transfer success:', response);
+        this.successMsg = `Transfer of ${this.transferAmount.toLocaleString()} MAD completed.`;
+        this.showTransferModal = false;
         this.loadAccounts();
         setTimeout(() => this.successMsg = '', 4000);
+        this.loading = false;
       },
-      error: err => { this.modalError = err?.error?.message ?? 'Transfer failed. Insufficient balance?'; }
+      error: (err) => {
+        console.error('Transfer error:', err);
+        this.modalError = err.error?.message || err.message || 'Transfer failed. Insufficient balance?';
+        this.loading = false;
+      }
     });
   }
 
@@ -205,12 +224,13 @@ export class AccountsComponent implements OnInit {
   selectCustomerForAccount(c: Customer): void {
     this.newAccountCustomerId = c.id!;
     this.customerSearch       = `${c.name} — ${c.email}`;
-    this.filteredCustomers    = [];   // close dropdown
+    this.filteredCustomers    = [];
   }
 
   submitNewAccount(): void {
     if (!this.newAccountCustomerId || this.newAccountBalance < 0) {
-      this.modalError = 'Select a customer and enter a valid initial balance.'; return;
+      this.modalError = 'Select a customer and enter a valid initial balance.';
+      return;
     }
     const obs = this.newAccountType === 'CURRENT'
       ? this.accountService.saveCurrentAccount(

@@ -1,12 +1,17 @@
 <div class="page">
   <div class="page-header">
-    <a routerLink="/customers" class="back-link">
+    <a routerLink="/admin/customers" class="back-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       Back to Customers
     </a>
   </div>
 
-  <div class="form-container">
+  <div *ngIf="!authService.hasRole('ADMIN')" class="alert alert-warning">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    You don't have permission to create customers. Please contact an administrator.
+  </div>
+
+  <div class="form-container" *ngIf="authService.hasRole('ADMIN')">
     <div class="form-card">
       <div class="form-card-header">
         <div class="header-icon">
@@ -29,41 +34,19 @@
 
       <div class="form-body">
         <div class="form-group">
-          <label for="name">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5 21v-2a4 4 0 014-4h6a4 4 0 014 4v2"/></svg>
-            Full Name
-          </label>
-          <input
-            id="name"
-            type="text"
-            [(ngModel)]="customer.name"
-            class="form-input"
-            placeholder="e.g. Mohamed Alami"
-            [class.has-value]="customer.name"
-          />
+          <label for="name">Full Name</label>
+          <input id="name" type="text" [(ngModel)]="customer.name" class="form-input" placeholder="e.g. Mohamed Alami"/>
         </div>
 
         <div class="form-group">
-          <label for="email">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            Email Address
-          </label>
-          <input
-            id="email"
-            type="email"
-            [(ngModel)]="customer.email"
-            class="form-input"
-            placeholder="e.g. m.alami@example.com"
-            [class.has-value]="customer.email"
-          />
+          <label for="email">Email Address</label>
+          <input id="email" type="email" [(ngModel)]="customer.email" class="form-input" placeholder="e.g. m.alami@example.com"/>
         </div>
 
         <div class="form-preview" *ngIf="customer.name || customer.email">
           <div class="preview-label">Preview</div>
           <div class="preview-card">
-            <div class="preview-avatar" *ngIf="customer.name">
-              {{ customer.name.charAt(0).toUpperCase() }}
-            </div>
+            <div class="preview-avatar">{{ customer.name.charAt(0).toUpperCase() }}</div>
             <div>
               <div class="preview-name">{{ customer.name || '—' }}</div>
               <div class="preview-email">{{ customer.email || '—' }}</div>
@@ -74,14 +57,8 @@
         <div class="form-actions">
           <button class="btn-ghost" (click)="reset()" type="button">Reset</button>
           <button class="btn-primary" (click)="submit()" [disabled]="loading">
-            <span *ngIf="!loading">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              Create Customer
-            </span>
-            <span *ngIf="loading">
-              <span class="spinner-sm"></span>
-              Creating...
-            </span>
+            <span *ngIf="!loading">Create Customer</span>
+            <span *ngIf="loading">Creating...</span>
           </button>
         </div>
       </div>

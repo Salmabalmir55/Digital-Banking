@@ -1,4 +1,3 @@
-/* ── Page ──────────────────────────────────────────────────────── */
 .page { padding: 2rem 2.5rem; max-width: 1400px; margin: 0 auto; }
 
 .page-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; }
@@ -27,7 +26,6 @@
 .alert.success { background:#e6f4ea; color:#156839; }
 .alert.error   { background:#fce8e8; color:#991b1b; }
 
-/* ── Filters ───────────────────────────────────────────────────── */
 .filter-bar { display:flex; gap:12px; margin-bottom:1.5rem; flex-wrap:wrap; }
 
 .search-wrap {
@@ -45,7 +43,6 @@
 }
 .filter-select:focus { border-color:#1a6fd4; }
 
-/* ── Layout ────────────────────────────────────────────────────── */
 .content-layout { display:grid; grid-template-columns:300px 1fr; gap:20px; align-items:start; }
 
 .accounts-list-panel {
@@ -76,7 +73,6 @@
 .ac-currency{ font-size:12px; color:#9ba8bf; font-weight:400; }
 .ac-meta    { font-size:12px; color:#6b7a95; margin-top:2px; }
 
-/* ── Detail panel ──────────────────────────────────────────────── */
 .detail-panel { background:#fff; border:1px solid #e4eaf4; border-radius:14px; padding:24px; box-shadow:0 1px 4px rgba(15,45,92,.05); }
 
 .detail-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #f0f4fa; }
@@ -129,9 +125,7 @@
 .spinner { width:32px; height:32px; border:3px solid #e4eaf4; border-top-color:#1a6fd4; border-radius:50%; animation:spin .8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* ════════════════════════════════════════════════════════════════ */
-/* MODAL SYSTEM — fixed, z-index 9999, nothing can clip           */
-/* ════════════════════════════════════════════════════════════════ */
+
 .modal-backdrop {
   position:fixed; inset:0; z-index:9999;
   background:rgba(10,25,55,.52);
@@ -167,7 +161,7 @@
 .modal-close-btn { width:34px; height:34px; background:rgba(255,255,255,.15); border:none; border-radius:9px; color:rgba(255,255,255,.8); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
 .modal-close-btn:hover { background:rgba(255,255,255,.28); color:#fff; }
 
-/* Body */
+
 .modal-body { padding:22px 24px; display:flex; flex-direction:column; gap:0; }
 
 .modal-err { display:flex; align-items:center; gap:8px; background:#fce8e8; color:#991b1b; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:500; margin-bottom:16px; }

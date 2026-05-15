@@ -109,13 +109,11 @@
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ─── MODAL ──────────────────────────────────────────────────── */
 
-/* Full-screen backdrop — fixed so nothing clips it */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 9999;                              /* always on top */
+  z-index: 9999;
   background: rgba(10, 25, 55, 0.45);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);

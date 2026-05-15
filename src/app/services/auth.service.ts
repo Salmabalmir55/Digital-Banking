@@ -30,19 +30,44 @@ export class AuthService {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded');
 
-    return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, body.toString(), { headers }).pipe(
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, body.toString(), { headers }).pipe(
       tap((res) => {
-        const token = (res as any)['access-token'] || res.accessToken;
+        const token = res['access-token'] || res.accessToken;
+
         if (token) {
           this.accessToken = token;
           this.isAuthenticated = true;
-          this.username = request.username;
-          this.roles = ['USER'];
+
+          try {
+            const decoded: any = jwtDecode(token);
+            this.username = decoded.sub;
+
+            if (decoded.scope) {
+              // Si scope est une chaîne comme "SCOPE_ADMIN SCOPE_USER"
+              if (typeof decoded.scope === 'string') {
+                // Nettoyer les préfixes "SCOPE_"
+                let roles = decoded.scope.split(' ');
+                this.roles = roles.map((role: string) => role.replace('SCOPE_', ''));
+              } else {
+                this.roles = decoded.scope;
+              }
+            } else if (decoded.roles) {
+              this.roles = Array.isArray(decoded.roles) ? decoded.roles : [decoded.roles];
+            } else {
+              this.roles = ['USER'];
+            }
+
+            console.log('Login réussi - Username:', this.username, 'Rôles:', this.roles);
+          } catch (e) {
+            console.error('Erreur décodage token:', e);
+            this.username = request.username;
+            this.roles = ['USER'];
+          }
 
           localStorage.setItem(this.TOKEN_KEY, token);
           localStorage.setItem(this.USER_KEY, JSON.stringify({
-            username: request.username,
-            roles: ['USER']
+            username: this.username,
+            roles: this.roles
           }));
         }
       })
@@ -84,18 +109,32 @@ export class AuthService {
   }
 
   hasRole(role: string): boolean {
-    return this.getProfile()?.roles?.includes(role) ?? false;
+    const profile = this.getProfile();
+    if (!profile || !profile.roles) return false;
+    const hasRole = profile.roles.includes(role) || profile.roles.includes(`SCOPE_${role}`);
+    console.log(`🔍 hasRole(${role}) = ${hasRole}`, profile.roles);
+    return hasRole;
   }
 
   loadJwtTokenFromLocalStorage() {
     const token = this.getToken();
     if (token) {
-      this.accessToken = token;
-      this.isAuthenticated = true;
-      const profile = this.getProfile();
-      if (profile) {
-        this.username = profile.username;
-        this.roles = profile.roles;
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp * 1000 > Date.now()) {
+          this.accessToken = token;
+          this.isAuthenticated = true;
+
+          const profile = this.getProfile();
+          if (profile) {
+            this.username = profile.username;
+            this.roles = profile.roles;
+          }
+        } else {
+          this.logout();
+        }
+      } catch(e) {
+        this.logout();
       }
     }
   }

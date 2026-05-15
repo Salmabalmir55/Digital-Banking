@@ -4,7 +4,7 @@
       <h1>Customers</h1>
       <p class="subtitle">Manage your customers</p>
     </div>
-    <a routerLink="/admin/new-customer" class="btn-primary">
+    <a *ngIf="authService.hasRole('ADMIN')" routerLink="/admin/new-customer" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="12" y1="5" x2="12" y2="19"/>
         <line x1="5" y1="12" x2="19" y2="12"/>
@@ -40,11 +40,11 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let customer of customers | async">
+      <tr *ngFor="let customer of filtered">
         <td>
           <div class="cell-customer">
             <div class="avatar" [style.background]="getAvatarColor(customer.name)">
-              {{ customer.name.charAt(0).toUpperCase() }}
+              {{ getInitial(customer.name) }}
             </div>
             <span class="cname">{{ customer.name }}</span>
           </div>
@@ -52,26 +52,64 @@
         <td class="cell-email">{{ customer.email }}</td>
         <td class="cell-id">#{{ customer.id }}</td>
         <td class="cell-actions">
-          <button class="icon-btn edit" (click)="editCustomer(customer)" title="Edit">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
-              <path d="M4 20h16"/>
-            </svg>
-          </button>
-          <button class="icon-btn delete" (click)="deleteCustomer(customer)" title="Delete">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M8 6V4h8v2"/>
-              <line x1="10" y1="11" x2="10" y2="17"/>
-              <line x1="14" y1="11" x2="14" y2="17"/>
-            </svg>
-          </button>
+          <div *ngIf="authService.hasRole('ADMIN')">
+            <button class="icon-btn edit" (click)="openEdit(customer)" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+                <path d="M4 20h16"/>
+              </svg>
+            </button>
+            <button class="icon-btn delete" (click)="deleteCustomer(customer.id)" title="Delete">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M8 6V4h8v2"/>
+                <line x1="10" y1="11" x2="10" y2="17"/>
+                <line x1="14" y1="11" x2="14" y2="17"/>
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="!authService.hasRole('ADMIN')" class="text-muted">Read only</div>
         </td>
       </tr>
-      <tr *ngIf="(customers | async)?.length === 0">
+      <tr *ngIf="filtered.length === 0">
         <td colspan="4" class="empty-state">No customers found</td>
       </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- MODAL D'ÉDITION -->
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEdit()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="modal-op-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+            <path d="M4 20h16"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Edit Customer</h3>
+          <p class="modal-subtitle">Update customer information</p>
+        </div>
+      </div>
+      <button class="modal-close-btn" (click)="closeEdit()">✕</button>
+    </div>
+    <div class="modal-body" *ngIf="editingCustomer">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-control" [(ngModel)]="editingCustomer.name">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" class="form-control" [(ngModel)]="editingCustomer.email">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeEdit()">Cancel</button>
+      <button class="btn-confirm" (click)="saveEdit()">Save Changes</button>
+    </div>
   </div>
 </div>

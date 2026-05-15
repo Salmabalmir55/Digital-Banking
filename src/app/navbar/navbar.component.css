@@ -46,3 +46,18 @@
   font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s;
 }
 .logout-btn:hover { background: rgba(220,53,69,0.2); border-color: rgba(220,53,69,0.4); color: #ff8a8a; }
+
+.user-role {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  margin-left: 4px;
+}
+
+.nav-link.nav-cta {
+  background: #1a6fd4;
+  color: #fff;
+  margin-left: 8px;
+}
+.nav-link.nav-cta:hover {
+  background: #1560be;
+}

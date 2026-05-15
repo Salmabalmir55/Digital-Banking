@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CustomerService } from '../services/customer.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-new-customer',
@@ -18,7 +19,8 @@ export class NewCustomerComponent {
 
   constructor(
     private customerService: CustomerService,
-    private router: Router
+    private router: Router,
+    public authService: AuthService  // ← AJOUTÉ (public pour le template)
   ) {}
 
   submit(): void {

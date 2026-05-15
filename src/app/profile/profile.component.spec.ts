@@ -7,12 +7,12 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileComponent]  // ← declarations, pas imports
+      declarations: [ProfileComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();  // ← mieux que whenStable
+    fixture.detectChanges();
   });
 
   it('should create', () => {

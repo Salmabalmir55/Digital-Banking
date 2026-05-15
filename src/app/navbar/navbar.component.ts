@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -7,13 +8,20 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) {
+    console.log('Navbar - AuthService.roles:', authService.roles);
+    console.log('Navbar - hasRole ADMIN:', authService.hasRole('ADMIN'));
+  }
 
   get username(): string {
     return this.authService.username || 'User';
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

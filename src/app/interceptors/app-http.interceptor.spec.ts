@@ -1,15 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
-import { authInterceptor } from './auth.interceptor';
-describe('AuthInterceptor', () => {
-  let service: typeof authInterceptor;
+@Injectable()
+export class AppHttpInterceptor implements HttpInterceptor {
+  constructor(private authService: AuthService) {}
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(authInterceptor);
-  });
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.authService.getToken();
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+    if (token && !request.url.includes('/auth/login') && !request.url.includes('/api/dashboard')) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+    return next.handle(request);
+  }
+}

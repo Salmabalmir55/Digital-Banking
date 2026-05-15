@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CustomersComponent } from './customers/customers.component';
 import { AccountsComponent } from './accounts/accounts.component';
 import { ProfileComponent } from './profile/profile.component';
+import { NewCustomerComponent } from './new-customer/new-customer.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 const routes: Routes = [
@@ -21,10 +22,12 @@ const routes: Routes = [
       { path: 'customers', component: CustomersComponent },
       { path: 'accounts', component: AccountsComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'new-customer', component: NewCustomerComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({
