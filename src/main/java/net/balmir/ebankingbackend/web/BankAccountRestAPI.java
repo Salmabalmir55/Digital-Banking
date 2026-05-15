@@ -3,6 +3,7 @@ package net.balmir.ebankingbackend.web;
 import net.balmir.ebankingbackend.dtos.*;
 import net.balmir.ebankingbackend.exceptions.BalanceNotSufficientException;
 import net.balmir.ebankingbackend.exceptions.BankAccountNotFoundException;
+import net.balmir.ebankingbackend.exceptions.CustomerNotFoundException;
 import net.balmir.ebankingbackend.services.BankAccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,10 +48,29 @@ public class BankAccountRestAPI {
         return creditDTO;
     }
     @PostMapping("/accounts/transfer")
-    public void transfer(@RequestBody TransferRequestDTO transferRequestDTO) throws BankAccountNotFoundException, BalanceNotSufficientException, BalanceNotSufficientException {
+    public void transfer(@RequestBody TransferRequestDTO transferRequestDTO)
+            throws BankAccountNotFoundException, BalanceNotSufficientException, BalanceNotSufficientException {
         this.bankAccountService.transfer(
                 transferRequestDTO.getAccountSource(),
                 transferRequestDTO.getAccountDestination(),
                 transferRequestDTO.getAmount());
     }
+
+
+    @PostMapping("/accounts/saveCurrent")
+    public BankAccountDTO saveCurrentAccount(
+            @RequestParam double initialBalance,
+            @RequestParam double overDraft,
+            @RequestParam Long customerId) throws CustomerNotFoundException {
+        return bankAccountService.saveCurrentAccount(initialBalance, overDraft, customerId);
+    }
+
+    @PostMapping("/accounts/saveSaving")
+    public BankAccountDTO saveSavingAccount(
+            @RequestParam double initialBalance,
+            @RequestParam double interestRate,
+            @RequestParam Long customerId) throws CustomerNotFoundException {
+        return bankAccountService.saveSavingAccount(initialBalance, interestRate, customerId);
+    }
+
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.balmir.ebankingbackend.dtos.*;
 import net.balmir.ebankingbackend.entities.*;
+import net.balmir.ebankingbackend.enums.AccountStatus;
 import net.balmir.ebankingbackend.enums.OperationType;
 import net.balmir.ebankingbackend.exceptions.BalanceNotSufficientException;
 import net.balmir.ebankingbackend.exceptions.BankAccountNotFoundException;
@@ -198,5 +199,39 @@ public class BankAccountServiceImpl implements BankAccountService {
         List<Customer> customers=customerRepository.searchCustomer(keyword);
         List<CustomerDTO> customerDTOS = customers.stream().map(cust -> dtoMapper.fromCustomer(cust)).collect(Collectors.toList());
         return customerDTOS;
+    }
+    @Override
+    public BankAccountDTO saveCurrentAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundException {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with id: " + customerId));
+
+        CurrentAccount currentAccount = new CurrentAccount();
+        currentAccount.setId(UUID.randomUUID().toString());
+        currentAccount.setCreatedAt(new Date());
+        currentAccount.setBalance(initialBalance);
+        currentAccount.setCustomer(customer);
+        currentAccount.setOverDraft(overDraft);
+        currentAccount.setStatus(AccountStatus.ACTIVATED);
+
+        BankAccount savedAccount = bankAccountRepository.save(currentAccount);
+
+        return dtoMapper.fromCurrentBankAccount((CurrentAccount) savedAccount);
+    }
+
+    @Override
+    public BankAccountDTO saveSavingAccount(double initialBalance, double interestRate, Long customerId) throws CustomerNotFoundException {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with id: " + customerId));
+
+        SavingAccount savingAccount = new SavingAccount();
+        savingAccount.setId(UUID.randomUUID().toString());
+        savingAccount.setCreatedAt(new Date());
+        savingAccount.setBalance(initialBalance);
+        savingAccount.setCustomer(customer);
+        savingAccount.setInterestRate(interestRate);
+        savingAccount.setStatus(AccountStatus.ACTIVATED);
+        BankAccount savedAccount = bankAccountRepository.save(savingAccount);
+
+        return dtoMapper.fromSavingBankAccount((SavingAccount) savedAccount);
     }
 }

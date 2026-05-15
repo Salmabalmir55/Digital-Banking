@@ -5,23 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8c2ecf81-d1a7-423a-a87e-fce1a8c3169c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/entities/AccountOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/entities/AccountOperation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/entities/BankAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/entities/BankAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/exceptions/BalanceNotSufficientException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/exceptions/BalanceNotSufficientException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/exceptions/BankAccountNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/exceptions/BankAccountNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/exceptions/CustomerNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/exceptions/CustomerNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/repositories/AccountOperationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/repositories/AccountOperationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/security/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/repositories/BankAccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/repositories/BankAccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/BankAccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/BankAccountService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/BankAccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/BankAccountServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/DashboardServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/DashboardServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/web/DashboardRestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/web/DashboardRestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/web/BankAccountRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/web/BankAccountRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/web/CustomerRestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/web/CustomerRestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/repositories/BankAccountRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/repositories/BankAccountRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/services/BankAccountService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/services/BankAccountService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/services/BankAccountServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/services/BankAccountServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/web/BankAccountRestAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/web/BankAccountRestAPI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/web/CustomerRestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/net/balmir/ebankingbackend/web/CustomerRestController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/ebanking-backend-0.0.1-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/ebanking-backend-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +84,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Spring Boot.EbankingBackendApplication.executor&quot;: &quot;Run&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;backend&quot;,
@@ -129,6 +131,7 @@
       <updated>1778552917321</updated>
       <workItem from="1778552918492" duration="3064000" />
       <workItem from="1778556049548" duration="7427000" />
+      <workItem from="1778846965796" duration="11604000" />
     </task>
     <servers />
   </component>
@@ -140,7 +143,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/net/balmir/ebankingbackend/services/BankAccountServiceImpl.java</url>
-          <line>46</line>
+          <line>47</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
