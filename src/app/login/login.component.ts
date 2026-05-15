@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   username = '';
   password = '';
   errorMsg = '';
@@ -17,39 +15,33 @@ export class LoginComponent implements OnInit {
   showPass = false;
   userFocused = false;
   passFocused = false;
-  private returnUrl = '/dashboard';
 
   constructor(
-    private auth: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
+    private authService: AuthService,
+    private router: Router
   ) {}
-
-  ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-    if (this.auth.isLoggedIn()) {
-      this.router.navigateByUrl(this.returnUrl);
-    }
-  }
 
   login(): void {
     if (!this.username.trim() || !this.password.trim()) {
       this.errorMsg = 'Please fill in both fields.';
       return;
     }
+
     this.loading = true;
     this.errorMsg = '';
 
-    this.auth.login({ username: this.username, password: this.password }).subscribe({
+    this.authService.login({ username: this.username, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigateByUrl(this.returnUrl);
+        this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
         this.loading = false;
-        this.errorMsg = (err.status === 401 || err.status === 403)
-          ? 'Invalid username or password.'
-          : 'Server error. Is Spring Boot running?';
+        if (err.status === 401 || err.status === 403) {
+          this.errorMsg = 'Invalid username or password.';
+        } else {
+          this.errorMsg = 'Server error. Please try again later.';
+        }
       }
     });
   }

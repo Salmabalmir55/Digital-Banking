@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserProfile } from '../model/auth.model';
 
 @Component({
   selector: 'app-profile',
-  standalone: true,
-  imports: [CommonModule, DatePipe],
-  templateUrl: './profile.html',
-  styleUrls: ['./profile.css']
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
   profile: UserProfile | null = null;
@@ -21,7 +18,7 @@ export class ProfileComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // this.profile = this.authService.getProfile();
+    this.profile = this.authService.getProfile();
     this.parseToken();
   }
 
@@ -35,7 +32,6 @@ export class ProfileComponent implements OnInit {
       this.expiresAt = new Date(payload.exp * 1000);
     } catch { /* ignore */ }
 
-    // Show first 80 chars + ellipsis
     this.tokenPreview = token.length > 80 ? token.slice(0, 80) + '…' : token;
   }
 
@@ -45,27 +41,27 @@ export class ProfileComponent implements OnInit {
   }
 
   getInitials(username: string): string {
-    return username.slice(0, 2).toUpperCase();
+    return username ? username.slice(0, 2).toUpperCase() : 'U';
   }
 
   formatRole(role: string): string {
-    return role.replace('ROLE_', '');
+    return role ? role.replace('ROLE_', '') : '';
   }
 
   getRoleClass(role: string): string {
-    return role.includes('ADMIN') ? 'admin' : 'user';
+    return role && role.includes('ADMIN') ? 'admin' : 'user';
   }
 
   getPermissions(): { label: string; granted: boolean }[] {
     const roles = this.profile?.roles ?? [];
     const isAdmin = roles.some(r => r.includes('ADMIN'));
-    const isUser  = roles.some(r => r.includes('USER'));
+    const isUser = roles.some(r => r.includes('USER'));
     return [
-      { label: 'View Accounts',      granted: isUser || isAdmin },
-      { label: 'Debit / Credit',     granted: isUser || isAdmin },
-      { label: 'Transfer Funds',     granted: isUser || isAdmin },
-      { label: 'Manage Customers',   granted: isAdmin },
-      { label: 'Admin Dashboard',    granted: isAdmin },
+      { label: 'View Accounts', granted: isUser || isAdmin },
+      { label: 'Debit / Credit', granted: isUser || isAdmin },
+      { label: 'Transfer Funds', granted: isUser || isAdmin },
+      { label: 'Manage Customers', granted: isAdmin },
+      { label: 'Admin Dashboard', granted: isAdmin },
     ];
   }
 

@@ -1,5 +1,4 @@
-// src/app/navbar/navbar.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -9,6 +8,10 @@ import { AuthService } from '../services/auth.service';
 })
 export class NavbarComponent {
   constructor(public authService: AuthService) {}
+
+  get username(): string {
+    return this.authService.username || 'User';
+  }
 
   logout() {
     this.authService.logout();

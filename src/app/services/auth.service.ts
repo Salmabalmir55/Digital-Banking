@@ -1,36 +1,59 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import jwtDecode from 'jwt-decode';
 
-export interface LoginRequest  { username: string; password: string; }
+export interface LoginRequest { username: string; password: string; }
 export interface LoginResponse { accessToken: string; username: string; roles: string; }
-export interface UserProfile   { username: string; roles: string[]; }
+export interface UserProfile { username: string; roles: string[]; }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl  = 'http://localhost:8080';
-  private TOKEN_KEY = 'accessToken';
-  private USER_KEY  = 'authUser';
+  private baseUrl = 'http://localhost:8086';
+  private TOKEN_KEY = 'jwt-token';
+  private USER_KEY = 'authUser';
+
+  isAuthenticated: boolean = false;
+  roles: any;
+  username: any;
+  accessToken: any;
 
   constructor(private http: HttpClient) {
-    // On startup, clear any expired token so isLoggedIn() is accurate
-    this.clearIfExpired();
+    this.loadJwtTokenFromLocalStorage();
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, request).pipe(
+    const body = new HttpParams()
+      .set('username', request.username)
+      .set('password', request.password);
+
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded');
+
+    return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, body.toString(), { headers }).pipe(
       tap((res) => {
-        localStorage.setItem(this.TOKEN_KEY, res.accessToken);
-        localStorage.setItem(this.USER_KEY, JSON.stringify({
-          username: res.username,
-          roles: this.parseRoles(res.roles)
-        }));
+        const token = (res as any)['access-token'] || res.accessToken;
+        if (token) {
+          this.accessToken = token;
+          this.isAuthenticated = true;
+          this.username = request.username;
+          this.roles = ['USER'];
+
+          localStorage.setItem(this.TOKEN_KEY, token);
+          localStorage.setItem(this.USER_KEY, JSON.stringify({
+            username: request.username,
+            roles: ['USER']
+          }));
+        }
       })
     );
   }
 
   logout(): void {
+    this.isAuthenticated = false;
+    this.accessToken = null;
+    this.username = null;
+    this.roles = null;
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
   }
@@ -46,45 +69,33 @@ export class AuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return payload.exp * 1000 > Date.now();
     } catch {
-      this.logout(); // clear corrupt token
+      this.logout();
       return false;
     }
   }
 
   getProfile(): UserProfile | null {
     const raw = localStorage.getItem(this.USER_KEY);
-    try { return raw ? JSON.parse(raw) : null; }
-    catch { return null; }
+    try {
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
   }
 
   hasRole(role: string): boolean {
     return this.getProfile()?.roles?.includes(role) ?? false;
   }
 
-  private parseRoles(raw: string): string[] {
-    if (!raw) return [];
-    return raw.replace(/[\[\]]/g, '').split(',').map(r => r.trim()).filter(Boolean);
-  }
-
-  private clearIfExpired(): void {
+  loadJwtTokenFromLocalStorage() {
     const token = this.getToken();
-    if (!token) return;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      if (payload.exp * 1000 <= Date.now()) this.logout();
-    } catch {
-      this.logout();
-    }
-    loadJwtTokenFromLocalStorage() {
-      const token = this.getToken();
-      if (token) {
-        this.accessToken = token;
-        this.isAuthenticated = true;
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          this.username = payload.sub;
-          this.roles = payload.scope;
-        } catch(e) {}
+    if (token) {
+      this.accessToken = token;
+      this.isAuthenticated = true;
+      const profile = this.getProfile();
+      if (profile) {
+        this.username = profile.username;
+        this.roles = profile.roles;
       }
     }
   }

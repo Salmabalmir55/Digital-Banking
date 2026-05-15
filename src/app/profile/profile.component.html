@@ -46,11 +46,11 @@
               <span class="status-dot active"></span> Active
             </span>
           </div>
-          <div class="info-row">
+          <div class="info-row" *ngIf="issuedAt">
             <span class="ir-label">Issued At</span>
             <span class="ir-value">{{ issuedAt | date:'dd/MM/yyyy HH:mm' }}</span>
           </div>
-          <div class="info-row">
+          <div class="info-row" *ngIf="expiresAt">
             <span class="ir-label">Expires At</span>
             <span class="ir-value">{{ expiresAt | date:'dd/MM/yyyy HH:mm' }}</span>
           </div>

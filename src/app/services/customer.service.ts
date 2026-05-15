@@ -5,7 +5,7 @@ import { Customer } from '../model/customer.model';
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://localhost:8086';
 
   constructor(private http: HttpClient) {}
 
@@ -34,19 +34,4 @@ export class CustomerService {
   deleteCustomer(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/customers/${id}`);
   }
-}import { TestBed } from '@angular/core/testing';
-
-import { DashboardService } from './dashboard.service';
-
-describe('DashboardService', () => {
-  let service: DashboardService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DashboardService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+}
