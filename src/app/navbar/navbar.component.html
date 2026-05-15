@@ -11,24 +11,29 @@
   </div>
 
   <div class="nav-links">
-    <a routerLink="/dashboard"    routerLinkActive="active" class="nav-link">
+    <!-- ✅ CORRECTION : Ajouter /admin/ devant -->
+    <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Dashboard
     </a>
-    <a routerLink="/customers"    routerLinkActive="active" class="nav-link">
+    <a routerLink="/admin/customers" routerLinkActive="active" class="nav-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.87"/></svg>
       Customers
     </a>
-    <a routerLink="/accounts"     routerLinkActive="active" class="nav-link">
+    <a routerLink="/admin/accounts" routerLinkActive="active" class="nav-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
       Accounts
+    </a>
+    <a routerLink="/admin/profile" routerLinkActive="active" class="nav-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="4"/><path d="M5 21v-2a4 4 0 014-4h6a4 4 0 014 4v2"/></svg>
+      Profile
     </a>
   </div>
 
   <div class="nav-user">
     <div class="user-chip">
-      <div class="user-avatar">{{ username.charAt(0).toUpperCase() }}</div>
-      <span class="user-name">{{ username }}</span>
+      <div class="user-avatar">{{ (authService.username || 'U').charAt(0).toUpperCase() }}</div>
+      <span class="user-name">{{ authService.username || 'User' }}</span>
     </div>
     <button class="logout-btn" (click)="logout()" title="Sign out">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

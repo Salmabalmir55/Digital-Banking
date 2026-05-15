@@ -10,6 +10,6 @@ export class DashboardService {
   constructor(private http: HttpClient) {}
 
   getDashboard(): Observable<DashboardDTO> {
-    return this.http.get<DashboardDTO>(`${this.baseUrl}/dashboard`);
+    return this.http.get<DashboardDTO>(`${this.baseUrl}/api/dashboard`);
   }
 }
