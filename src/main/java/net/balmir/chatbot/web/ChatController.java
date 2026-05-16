@@ -18,6 +18,7 @@ public class ChatController  {
     private AIAgent aiAgent;
 
     public ChatController(AIAgent aiAgent) {
+
         this.aiAgent = aiAgent;
     }
 
